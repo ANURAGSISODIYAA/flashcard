@@ -1,23 +1,23 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import FlashcardViewer from './FlashcardViewer';
+import Dashboard from './Dashboard';
 import './App.css';
 
 function App() {
+  const [flashcards, setFlashcards] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/flashcards')
+      .then(response => setFlashcards(response.data))
+      .catch(error => console.error('Error fetching flashcards:', error));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Flashcard Tool</h1>
+      <FlashcardViewer flashcards={flashcards} />
+      <Dashboard flashcards={flashcards} setFlashcards={setFlashcards} />
     </div>
   );
 }
