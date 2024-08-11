@@ -33,7 +33,7 @@ function Dashboard({ flashcards, setFlashcards }) {
 
   const handleDelete = (index) => {
     const id = flashcards[index].id;
-    axios.delete(`http://localhost:5000/flashcards/${id}`)
+    axios.delete(`https://backend-flashcard-eta.vercel.app/flashcards/${id}`)
       .then(() => {
         const updatedFlashcards = flashcards.filter((_, i) => i !== index);
         setFlashcards(updatedFlashcards);
