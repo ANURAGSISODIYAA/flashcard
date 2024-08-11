@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import FlashcardViewer from './FlashcardViewer';
 import Dashboard from './Dashboard';
 import './App.css';
@@ -7,11 +6,16 @@ import './App.css';
 function App() {
   const [flashcards, setFlashcards] = useState([]);
 
+  // Load flashcards from local storage on component mount
   useEffect(() => {
-    axios.get('https://backend-flashcard-eta.vercel.app/flashcards')
-      .then(response => setFlashcards(response.data))
-      .catch(error => console.error('Error fetching flashcards:', error));
+    const storedFlashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+    setFlashcards(storedFlashcards);
   }, []);
+
+  // Save flashcards to local storage
+  useEffect(() => {
+    localStorage.setItem('flashcards', JSON.stringify(flashcards));
+  }, [flashcards]);
 
   return (
     <div className="App">

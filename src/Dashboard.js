@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import './Dashboard.css';
 
 function Dashboard({ flashcards, setFlashcards }) {
@@ -9,17 +8,13 @@ function Dashboard({ flashcards, setFlashcards }) {
 
   const handleAddOrEdit = () => {
     if (editIndex !== null) {
-      const updatedFlashcards = flashcards.map((flashcard, index) => 
+      const updatedFlashcards = flashcards.map((flashcard, index) =>
         index === editIndex ? { question, answer } : flashcard
       );
       setFlashcards(updatedFlashcards);
-      axios.put(`http://localhost:5000/flashcards/${flashcards[editIndex].id}`, { question, answer })
-        .catch(error => console.error('Error updating flashcard:', error));
       setEditIndex(null);
     } else {
-      axios.post('http://localhost:5000/flashcards', { question, answer })
-        .then(response => setFlashcards([...flashcards, response.data]))
-        .catch(error => console.error('Error adding flashcard:', error));
+      setFlashcards([...flashcards, { question, answer }]);
     }
     setQuestion('');
     setAnswer('');
@@ -32,30 +27,25 @@ function Dashboard({ flashcards, setFlashcards }) {
   };
 
   const handleDelete = (index) => {
-    const id = flashcards[index].id;
-    axios.delete(`https://backend-flashcard-eta.vercel.app/flashcards/${id}`)
-      .then(() => {
-        const updatedFlashcards = flashcards.filter((_, i) => i !== index);
-        setFlashcards(updatedFlashcards);
-      })
-      .catch(error => console.error('Error deleting flashcard:', error));
+    const updatedFlashcards = flashcards.filter((_, i) => i !== index);
+    setFlashcards(updatedFlashcards);
   };
 
   return (
     <div className="dashboard">
       <h2>Admin Dashboard</h2>
       <div className="form">
-        <input 
-          type="text" 
-          placeholder="Question" 
-          value={question} 
-          onChange={e => setQuestion(e.target.value)} 
+        <input
+          type="text"
+          placeholder="Question"
+          value={question}
+          onChange={e => setQuestion(e.target.value)}
         />
-        <input 
-          type="text" 
-          placeholder="Answer" 
-          value={answer} 
-          onChange={e => setAnswer(e.target.value)} 
+        <input
+          type="text"
+          placeholder="Answer"
+          value={answer}
+          onChange={e => setAnswer(e.target.value)}
         />
         <button onClick={handleAddOrEdit}>
           {editIndex !== null ? 'Update Flashcard' : 'Add Flashcard'}
